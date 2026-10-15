@@ -37,7 +37,7 @@ public class bk_sekolah extends javax.swing.JFrame {
         menu_induk = new javax.swing.JMenu();
         item_siswa = new javax.swing.JMenuItem();
         item_guru = new javax.swing.JMenuItem();
-        jMenu5 = new javax.swing.JMenu();
+        laporan = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -45,7 +45,6 @@ public class bk_sekolah extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setPreferredSize(new java.awt.Dimension(680, 500));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Selamat Datang Di Aplikasi BK SMKN 1 Dlanggu");
@@ -90,20 +89,25 @@ public class bk_sekolah extends javax.swing.JFrame {
 
         jMenuBar1.add(menu_induk);
 
-        jMenu5.setText("Laporan");
-        jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+        laporan.setText("Laporan");
+        laporan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu5MouseClicked(evt);
+                laporanMouseClicked(evt);
             }
         });
-        jMenu5.addActionListener(new java.awt.event.ActionListener() {
+        laporan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu5ActionPerformed(evt);
+                laporanActionPerformed(evt);
             }
         });
-        jMenuBar1.add(jMenu5);
+        jMenuBar1.add(laporan);
 
         jMenu4.setText("Pelanggaran & Prestasi");
+        jMenu4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu4ActionPerformed(evt);
+            }
+        });
 
         jMenuItem1.setText("Pelanggaran");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -168,9 +172,9 @@ siswa frame = new siswa();
         // TODO add your handling code here:
     }//GEN-LAST:event_item_siswaActionPerformed
 
-    private void jMenu5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu5ActionPerformed
+    private void laporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_laporanActionPerformed
 // TODO add your handling code here:
-    }//GEN-LAST:event_jMenu5ActionPerformed
+    }//GEN-LAST:event_laporanActionPerformed
     private void menu_indukActionPerformed(java.awt.event.ActionEvent evt) {
     // Tidak perlu melakukan apa-apa
 }
@@ -180,15 +184,20 @@ prestasi frame = new prestasi();
     frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
-prestasi frame = new prestasi();
+    private void laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_laporanMouseClicked
+                      // TODO add your handling code here:
+    laporan frame = new laporan();
     frame.setLocationRelativeTo(this);
-    frame.setVisible(true);                      // TODO add your handling code here:
-    }//GEN-LAST:event_jMenu5MouseClicked
+    frame.setVisible(true);
+    }//GEN-LAST:event_laporanMouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenu2MouseClicked
+
+    private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -221,11 +230,11 @@ prestasi frame = new prestasi();
     private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenu laporan;
     private javax.swing.JMenu menu_induk;
     // End of variables declaration//GEN-END:variables
 }
