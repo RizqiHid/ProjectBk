@@ -181,8 +181,9 @@ prestasi frame = new prestasi();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
-new laporan().setVisible(true);
-this.dispose();        // TODO add your handling code here:
+laporan frame = new laporan();
+    frame.setLocationRelativeTo(this);
+    frame.setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jMenu5MouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
