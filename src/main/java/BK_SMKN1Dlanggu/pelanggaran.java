@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package BK_SMKN1Dlanggu;
-
+import javax.swing.JOptionPane;
 /**
  *
  * @author 16_Devin_X-RPL-3#
@@ -213,6 +213,46 @@ public class pelanggaran extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+    // Ambil data dari input
+    String idSiswa = jTextField1.getText().trim();
+    String nama = jTextField2.getText().trim();
+    String kelas = jComboBox2.getSelectedItem().toString();
+    String status = jComboBox1.getSelectedItem().toString();
+    String keterangan = jTextField3.getText().trim();
+
+    // Validasi input
+    if (idSiswa.isEmpty()
+            || nama.isEmpty()
+            || keterangan.isEmpty()) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "ID siswa, nama, dan keterangan wajib diisi!"
+        );
+        return;
+    }
+
+    // Kirim data ke penyimpanan laporan
+    laporan.tambahDataLaporan(
+            idSiswa,
+            nama,
+            kelas,
+            status,
+            "Pelanggaran: " + keterangan
+    );
+
+    JOptionPane.showMessageDialog(
+            this,
+            "Laporan pelanggaran berhasil dikirim!"
+    );
+
+    // Kosongkan input setelah berhasil
+    jTextField1.setText("");
+    jTextField2.setText("");
+    jTextField3.setText("");
+    jComboBox1.setSelectedIndex(0);
+    jComboBox2.setSelectedIndex(0);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
