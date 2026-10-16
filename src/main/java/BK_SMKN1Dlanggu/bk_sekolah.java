@@ -36,12 +36,10 @@ public class bk_sekolah extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         menu_induk = new javax.swing.JMenu();
         item_siswa = new javax.swing.JMenuItem();
-        item_guru = new javax.swing.JMenuItem();
         laporan = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu6 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -78,14 +76,6 @@ public class bk_sekolah extends javax.swing.JFrame {
             }
         });
         menu_induk.add(item_siswa);
-
-        item_guru.setText("Data Guru");
-        item_guru.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                item_guruActionPerformed(evt);
-            }
-        });
-        menu_induk.add(item_guru);
 
         jMenuBar1.add(menu_induk);
 
@@ -127,9 +117,6 @@ public class bk_sekolah extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu4);
 
-        jMenu6.setText("Logout");
-        jMenuBar1.add(jMenu6);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -151,12 +138,6 @@ public class bk_sekolah extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void item_guruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_item_guruActionPerformed
-new guru().setVisible(true); 
-this.dispose();
-        // TODO add your handling code here:
-    }//GEN-LAST:event_item_guruActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 pelanggaran frame = new pelanggaran();
@@ -225,12 +206,10 @@ prestasi frame = new prestasi();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem item_guru;
     private javax.swing.JMenuItem item_siswa;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
