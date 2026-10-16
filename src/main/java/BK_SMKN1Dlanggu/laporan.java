@@ -3,34 +3,127 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package BK_SMKN1Dlanggu;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author 16_Devin_X-RPL-3#
  */
 public class laporan extends javax.swing.JFrame {
-    DefaultTableModel model;
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(laporan.class.getName());
 
-    /**
-     * Creates new form laporan
-     */
+    private DefaultTableModel model;
+
+    // Penyimpanan sementara bersama untuk semua instance laporan.
+    private static final List<Object[]> dataLaporan = new ArrayList<>();
+    private static int nextId = 1;
+
+    private int selectedId = -1;
+
+    private static final java.util.logging.Logger logger =
+            java.util.logging.Logger.getLogger(laporan.class.getName());
+
     public laporan() {
         initComponents();
 
-    model = new DefaultTableModel();
+        model = new DefaultTableModel(
+            new String[]{
+                "Id Siswa",
+                "Nama",
+                "Kelas/Jurusan",
+                "Status",
+                "Prestasi/Pelanggaran"
+            }, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-    model.addColumn("ID");
-    model.addColumn("Nama");
-    model.addColumn("Kelas/Jurusan");
-    model.addColumn("Status");
-    model.addColumn("Tanggal");
-
-    tblLaporan.setModel(model);
+        tblLaporan.setModel(model);
+        muatDataTabel("");
     }
+
+     // Dipanggil oleh frame Prestasi dan Pelanggaran.
+    public static void tambahDataLaporan(
+            String idSiswa,
+            String nama,
+            String kelas,
+            String status,
+            String jenis) {
+
+        Object[] data = {
+            nextId++,
+            idSiswa,
+            nama,
+            kelas,
+            status,
+            jenis
+        };
+
+        dataLaporan.add(data);
+    }
+
+    // Memuat semua data atau hasil pencarian ke tabel.
+    private void muatDataTabel(String kataKunci) {
+        model.setRowCount(0);
+
+        String cari = kataKunci.trim().toLowerCase();
+
+        for (Object[] data : dataLaporan) {
+            String id = data[1].toString().toLowerCase();
+            String nama = data[2].toString().toLowerCase();
+
+            if (cari.isEmpty()
+                    || id.contains(cari)
+                    || nama.contains(cari)) {
+
+                model.addRow(new Object[]{
+                    data[1],
+                    data[2],
+                    data[3],
+                    data[4],
+                    data[5]
+                });
+            }
+        }
+
+        selectedId = -1;
+        kosongkanInput();
+    }
+
+    private Object[] cariDataBerdasarkanIdSiswa(String idSiswa) {
+        for (Object[] data : dataLaporan) {
+            if (data[1].toString().equals(idSiswa)) {
+                return data;
+            }
+        }
+
+        return null;
+    }
+
+    private Object[] cariDataInternal(int idCatatan) {
+        for (Object[] data : dataLaporan) {
+            if ((int) data[0] == idCatatan) {
+                return data;
+            }
+        }
+
+        return null;
+    }
+
+    private void kosongkanInput() {
+        txtId.setText("");
+        txtNama.setText("");
+        cmbKelas.setSelectedIndex(0);
+        cmbStatus.setSelectedIndex(0);
+        tblLaporan.clearSelection();
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -47,7 +140,7 @@ public class laporan extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         cmbStatus = new javax.swing.JComboBox<>();
         btnHapus = new javax.swing.JButton();
-        btnTambah = new javax.swing.JButton();
+        btnCari = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -86,10 +179,10 @@ public class laporan extends javax.swing.JFrame {
             }
         });
 
-        btnTambah.setText("Tambah");
-        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+        btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTambahActionPerformed(evt);
+                btnCariActionPerformed(evt);
             }
         });
 
@@ -156,7 +249,7 @@ public class laporan extends javax.swing.JFrame {
                             .addComponent(txtId))
                         .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnTambah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnHapus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(240, 240, 240)
@@ -164,7 +257,7 @@ public class laporan extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -179,7 +272,7 @@ public class laporan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
@@ -213,94 +306,79 @@ public class laporan extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbKelasActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-                                         
-    int baris = tblLaporan.getSelectedRow();
+        if (selectedId == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Pilih data yang ingin dihapus!");
+            return;
+        }
 
-    if (baris == -1) {
-        JOptionPane.showMessageDialog(this,
-                "Pilih data yang ingin dihapus!");
+        int konfirmasi = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah yakin ingin menghapus data ini?",
+                "Konfirmasi Hapus",
+                JOptionPane.YES_NO_OPTION
+        );
 
-        return;
-    }
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            int id = selectedId;
 
-    int konfirmasi = JOptionPane.showConfirmDialog(
-            this,
-            "Apakah yakin ingin menghapus data ini?",
-            "Konfirmasi Hapus",
-            JOptionPane.YES_NO_OPTION
-    );
+            dataLaporan.removeIf(
+                    data -> (int) data[0] == id
+            );
 
-    if (konfirmasi == JOptionPane.YES_OPTION) {
+            muatDataTabel("");
 
-        model.removeRow(baris);
-
-        txtId.setText("");
-        txtNama.setText("");
-        cmbKelas.setSelectedIndex(0);
-        cmbStatus.setSelectedIndex(0);
-
-        JOptionPane.showMessageDialog(this,
-                "Data berhasil dihapus!");
-    }
-        // TODO add your handling code here:
+            JOptionPane.showMessageDialog(this,
+                    "Data laporan berhasil dihapus.");
+        }
+   // TODO add your handling code here:
     }//GEN-LAST:event_btnHapusActionPerformed
 
-    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
-                                        
-    String id = txtId.getText();
-    String nama = txtNama.getText();
-    String kelas = cmbKelas.getSelectedItem().toString();
-    String status = cmbStatus.getSelectedItem().toString();
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+    String kataKunci = txtId.getText().trim();
 
-    if (id.isEmpty() || nama.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-                "ID dan Nama harus diisi!");
+        if (kataKunci.isEmpty()) {
+            kataKunci = txtNama.getText().trim();
+        }
 
-        return;
-    }
-
-    String tanggal = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-
-    model.addRow(new Object[]{
-        id,
-        nama,
-        kelas,
-        status,
-        tanggal
-    });
-
-    txtId.setText("");
-    txtNama.setText("");
-    cmbKelas.setSelectedIndex(0);
-    cmbStatus.setSelectedIndex(0);
-
-    JOptionPane.showMessageDialog(this,
-            "Laporan siswa berhasil ditambahkan!");
+        muatDataTabel(kataKunci);
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnTambahActionPerformed
+    }//GEN-LAST:event_btnCariActionPerformed
 
     private void tblLaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLaporanMouseClicked
                                          
     int baris = tblLaporan.getSelectedRow();
 
-    if (baris != -1) {
+        if (baris == -1) {
+            return;
+        }
 
-        txtId.setText(
-                model.getValueAt(baris, 0).toString()
-        );
+        String idSiswa = model.getValueAt(baris, 0).toString();
+        String nama = model.getValueAt(baris, 1).toString();
+        String kelas = model.getValueAt(baris, 2).toString();
+        String status = model.getValueAt(baris, 3).toString();
+        String jenis = model.getValueAt(baris, 4).toString();
 
-        txtNama.setText(
-                model.getValueAt(baris, 1).toString()
-        );
+        txtId.setText(idSiswa);
+        txtNama.setText(nama);
+        cmbKelas.setSelectedItem(kelas);
+        cmbStatus.setSelectedItem(status);
 
-        cmbKelas.setSelectedItem(
-                model.getValueAt(baris, 2).toString()
-        );
+        // Cari ID internal berdasarkan baris yang dipilih.
+        selectedId = -1;
 
-        cmbStatus.setSelectedItem(
-                model.getValueAt(baris, 3).toString()
-        );
-    }        // TODO add your handling code here:
+        for (Object[] data : dataLaporan) {
+            if (data[1].toString().equals(idSiswa)
+                    && data[2].toString().equals(nama)
+                    && data[3].toString().equals(kelas)
+                    && data[4].toString().equals(status)
+                    && data[5].toString().equals(jenis)) {
+
+                selectedId = (int) data[0];
+                break;
+            }
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_tblLaporanMouseClicked
 
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
@@ -309,35 +387,39 @@ public class laporan extends javax.swing.JFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
 
-        int baris = tblLaporan.getSelectedRow();
-
-        if (baris == -1) {
+        if (selectedId == -1) {
             JOptionPane.showMessageDialog(this,
-                "Pilih data yang ingin diedit!");
-
+                    "Pilih data yang ingin diedit!");
             return;
         }
 
-        String id = txtId.getText();
-        String nama = txtNama.getText();
-        String kelas = cmbKelas.getSelectedItem().toString();
-        String status = cmbStatus.getSelectedItem().toString();
+        Object[] data = cariDataInternal(selectedId);
+
+        if (data == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Data tidak ditemukan!");
+            muatDataTabel("");
+            return;
+        }
+
+        String id = txtId.getText().trim();
+        String nama = txtNama.getText().trim();
 
         if (id.isEmpty() || nama.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "ID dan Nama harus diisi!");
-
+                    "ID dan Nama harus diisi!");
             return;
         }
 
-        model.setValueAt(id, baris, 0);
-        model.setValueAt(nama, baris, 1);
-        model.setValueAt(kelas, baris, 2);
-        model.setValueAt(status, baris, 3);
+        data[1] = id;
+        data[2] = nama;
+        data[3] = cmbKelas.getSelectedItem().toString();
+        data[4] = cmbStatus.getSelectedItem().toString();
+
+        muatDataTabel("");
 
         JOptionPane.showMessageDialog(this,
-            "Data berhasil diedit!");
-        // TODO add your handling code here:
+                "Data laporan berhasil diedit."); // TODO add your handling code here:
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
@@ -347,32 +429,22 @@ public class laporan extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new laporan().setVisible(true));
+    // Panggil ini jika frame laporan sudah terbuka dan data baru masuk.
+    public void refreshLaporan() {
+        muatDataTabel("");
     }
 
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() ->
+                new laporan().setVisible(true));
+    // Pertahankan initComponents() dari kode GUI Builder lu.
+    // Pertahankan juga deklarasi semua komponen GUI di bagian bawah.
+}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCari;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
-    private javax.swing.JButton btnTambah;
     private javax.swing.JComboBox<String> cmbKelas;
     private javax.swing.JComboBox<String> cmbStatus;
     private javax.swing.JLabel jLabel1;
