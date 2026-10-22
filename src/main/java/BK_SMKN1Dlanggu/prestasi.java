@@ -146,7 +146,7 @@ public class prestasi extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(265, 265, 265)
                                 .addComponent(jButton1)))
-                        .addGap(0, 90, Short.MAX_VALUE)))
+                        .addGap(0, 186, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -179,7 +179,7 @@ public class prestasi extends javax.swing.JFrame {
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addComponent(jButton1)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(154, Short.MAX_VALUE))
         );
 
         pack();
