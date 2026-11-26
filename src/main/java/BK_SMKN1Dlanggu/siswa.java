@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.ButtonGroup;
+import java.text.ParseException;
+
 /**
  *
  * @author 16_Devin_X-RPL-3#
@@ -22,16 +25,61 @@ public class siswa extends javax.swing.JFrame {
      */
     public siswa() {
         initComponents();
-        
-         model = new DefaultTableModel();
+        // Group tingkat kelas
+ButtonGroup groupTingkat = new ButtonGroup();
 
-    model.addColumn("Id Siswa");
-    model.addColumn("Nama");
-    model.addColumn("Kelas");
-    model.addColumn("Tanggal");
+groupTingkat.add(jRadioButton1); // X
+groupTingkat.add(jRadioButton2); // XI
+groupTingkat.add(jRadioButton3); // XII
 
-    tabel_siswa.setModel(model);
+
+// Group nomor kelas
+ButtonGroup groupNomor = new ButtonGroup();
+
+groupNomor.add(jRadioButton4); // 1
+groupNomor.add(jRadioButton5); // 2
+groupNomor.add(jRadioButton6); // 3
+
+    model = new DefaultTableModel();
+
+model.addColumn("NISN");
+model.addColumn("Nama");
+model.addColumn("Jurusan");
+model.addColumn("Kelas");
+model.addColumn("Tanggal Lahir");
+model.addColumn("Kota/Kab");
+model.addColumn("Kecamatan");
+model.addColumn("Desa");
+model.addColumn("Dsn/Jl");
+
+tabel_siswa.setModel(model);
+
     }
+    
+    private void updateKelas() {
+
+    Object pilihan = cmb_kelas.getSelectedItem();
+
+    if (pilihan == null) {
+        return;
+    }
+
+    String jurusan = pilihan.toString();
+
+    if (jurusan.equals("ANM") ||
+        jurusan.equals("PHT") ||
+        jurusan.equals("DKV")) {
+
+        jRadioButton6.setEnabled(false); // Tombol 3
+        jRadioButton6.setSelected(false);
+
+    } else if (jurusan.equals("RPL") ||
+               jurusan.equals("TKJ") ||
+               jurusan.equals("KL")) {
+
+        jRadioButton6.setEnabled(true); // Tombol 3 bisa diklik
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,6 +90,8 @@ public class siswa extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jRadioButton7 = new javax.swing.JRadioButton();
+        jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabel_siswa = new javax.swing.JTable();
@@ -70,11 +120,12 @@ public class siswa extends javax.swing.JFrame {
         jComboBox3 = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+
+        jRadioButton7.setText("jRadioButton7");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 500));
         setSize(new java.awt.Dimension(700, 500));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -88,7 +139,7 @@ public class siswa extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "NISN", "Nama", "Jurusan", "", "Kelas", "Tanggal", "Kota/Kab", "Desa", "Dsn/Jl"
+                "NISN", "Nama", "Jurusan", "Kelas", "Tanggal Lahir", "Kota/Kab", "Kecamatan", "Desa", "Dsn/Jln"
             }
         ));
         tabel_siswa.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -138,8 +189,18 @@ public class siswa extends javax.swing.JFrame {
         });
 
         jButton2.setText("Edit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Search");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("NISN");
 
@@ -164,14 +225,23 @@ public class siswa extends javax.swing.JFrame {
         jRadioButton5.setText("2");
 
         jRadioButton6.setText("3");
+        jRadioButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton6ActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kota.Mjk", "Kab.Mjk", "Kab.Sda" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kota Mojokerto", "Kabupaten Mojokerto", "Kabupaten Sidoarjo" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Kota/Kab");
 
         jLabel7.setText("Kec.");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Puri", "Dlanggu", "Pacet", "Kutorejo", " " }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -180,7 +250,6 @@ public class siswa extends javax.swing.JFrame {
 
         jLabel8.setText("Desa");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tangunan", "Puri", "Mlaten", " ", "Badung", "Phokecik", "Kedunglengkong", " ", "Sajen", "Pacet", "Gotean", " ", "Sanggrahan", "Kutorejo", "Karangdiyeng" }));
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox3ActionPerformed(evt);
@@ -206,7 +275,7 @@ public class siswa extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 856, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -250,7 +319,7 @@ public class siswa extends javax.swing.JFrame {
                                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(153, 153, 153)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(351, 351, 351)
@@ -265,7 +334,7 @@ public class siswa extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1)))
-                .addGap(0, 9, Short.MAX_VALUE))
+                .addGap(0, 14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -273,44 +342,48 @@ public class siswa extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
                 .addGap(55, 55, 55)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(id_siswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5))
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txt_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(cmb_kelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton5)
-                    .addComponent(jRadioButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jRadioButton3))
-                .addGap(1, 1, 1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(id_siswa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5))
+                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txt_nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(cmb_kelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jRadioButton4)
+                            .addComponent(jRadioButton5)
+                            .addComponent(jRadioButton6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButton1)
+                            .addComponent(jRadioButton2)
+                            .addComponent(jRadioButton3))
+                        .addGap(1, 1, 1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -325,11 +398,214 @@ public class siswa extends javax.swing.JFrame {
                 .addGap(12, 12, 12))
         );
 
+        jComboBox1.getAccessibleContext().setAccessibleDescription("");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private void updateKecamatan() {
 
+    jComboBox2.removeAllItems();
+
+    Object pilihan = jComboBox1.getSelectedItem();
+
+    if (pilihan == null) {
+        return;
+    }
+
+    String kabupaten = pilihan.toString();
+
+    if (kabupaten.equals("Kabupaten Mojokerto")) {
+
+        jComboBox2.addItem("Puri");
+        jComboBox2.addItem("Trawas");
+        jComboBox2.addItem("Dlanggu");
+
+    } else if (kabupaten.equals("Kota Mojokerto")) {
+
+        jComboBox2.addItem("Magersari");
+        jComboBox2.addItem("Prajurit Kulon");
+        jComboBox2.addItem("Kranggan");
+        
+    } else if (kabupaten.equals("Kabupaten Sidoarjo")) {
+
+        jComboBox2.addItem("Tarik");
+        jComboBox2.addItem("Prambon");
+        jComboBox2.addItem("Krian");
+    }
+}
+    
+    private void updateDesa() {
+
+    jComboBox3.removeAllItems();
+
+    Object pilihan = jComboBox2.getSelectedItem();
+
+    if (pilihan == null) {
+        return;
+    }
+
+    String kecamatan = pilihan.toString();
+
+    // KABUPATEN MOJOKERTO
+    if (kecamatan.equals("Puri")) {
+
+        jComboBox3.addItem("Balongmojo");
+        jComboBox3.addItem("Banjaragung");
+        jComboBox3.addItem("Brayung");
+        jComboBox3.addItem("Kebonagung");
+        jComboBox3.addItem("Kenanten");
+        jComboBox3.addItem("Ketemasdungus");
+        jComboBox3.addItem("Kintelan");
+        jComboBox3.addItem("Medali");
+        jComboBox3.addItem("Mlaten");
+        jComboBox3.addItem("Plososari");
+        jComboBox3.addItem("Puri");
+        jComboBox3.addItem("Sumbergirang");
+        jComboBox3.addItem("Sumolawang");
+        jComboBox3.addItem("Tambakagung");
+        jComboBox3.addItem("Tampungrejo");
+        jComboBox3.addItem("Tangunan");
+
+    } else if (kecamatan.equals("Trawas")) {
+
+        jComboBox3.addItem("Belik");
+        jComboBox3.addItem("Duyung");
+        jComboBox3.addItem("Jatijejer");
+        jComboBox3.addItem("Kedungudi");
+        jComboBox3.addItem("Kesiman");
+        jComboBox3.addItem("Ketapanrame");
+        jComboBox3.addItem("Penanggungan");
+        jComboBox3.addItem("Seloliman");
+        jComboBox3.addItem("Selotapak");
+        jComboBox3.addItem("Sugeng");
+        jComboBox3.addItem("Sukosari");
+        jComboBox3.addItem("Tamiajeng");
+        jComboBox3.addItem("Trawas");
+
+    } else if (kecamatan.equals("Dlanggu")) {
+
+        jComboBox3.addItem("Dlanggu");
+        jComboBox3.addItem("Jrambe");
+        jComboBox3.addItem("Kedunggede");
+        jComboBox3.addItem("Kedunglengkong");
+        jComboBox3.addItem("Kedungwungu");
+        jComboBox3.addItem("Ngembeh");
+        jComboBox3.addItem("Pohkecik");
+        jComboBox3.addItem("Segunung");
+        jComboBox3.addItem("Sumberkarang");
+        jComboBox3.addItem("Sumbersono");
+        jComboBox3.addItem("Talok");
+        jComboBox3.addItem("Tarik");
+        jComboBox3.addItem("Watukosek");
+        jComboBox3.addItem("Punggul");
+        jComboBox3.addItem("Randegan");
+        jComboBox3.addItem("Pandean");
+
+    }
+
+    // KOTA MOJOKERTO
+    else if (kecamatan.equals("Magersari")) {
+
+        jComboBox3.addItem("Gunung Gedangan");
+        jComboBox3.addItem("Kedundung");
+        jComboBox3.addItem("Balongsari");
+        jComboBox3.addItem("Gedongan");
+        jComboBox3.addItem("Magersari");
+        jComboBox3.addItem("Wates");
+
+    } else if (kecamatan.equals("Prajurit Kulon")) {
+
+        jComboBox3.addItem("Surodinawan");
+        jComboBox3.addItem("Prajurit Kulon");
+        jComboBox3.addItem("Blooto");
+        jComboBox3.addItem("Mentikan");
+        jComboBox3.addItem("Kauman");
+        jComboBox3.addItem("Pulorejo");
+
+    } else if (kecamatan.equals("Kranggan")) {
+
+        jComboBox3.addItem("Kranggan");
+        jComboBox3.addItem("Meri");
+        jComboBox3.addItem("Jagalan");
+        jComboBox3.addItem("Miji");
+        jComboBox3.addItem("Sentanan");
+        jComboBox3.addItem("Purwotengah");
+
+    }
+
+    // KABUPATEN SIDOARJO
+    else if (kecamatan.equals("Tarik")) {
+
+        jComboBox3.addItem("Balongmacekan");
+        jComboBox3.addItem("Banjarwungu");
+        jComboBox3.addItem("Gampingrowo");
+        jComboBox3.addItem("Gempolklutuk");
+        jComboBox3.addItem("Janti");
+        jComboBox3.addItem("Kalimati");
+        jComboBox3.addItem("Kedinding");
+        jComboBox3.addItem("Kedungbocok");
+        jComboBox3.addItem("Kemuning");
+        jComboBox3.addItem("Kendalsewu");
+        jComboBox3.addItem("Klantingsari");
+        jComboBox3.addItem("Kramat Temenggung");
+        jComboBox3.addItem("Mergobener");
+        jComboBox3.addItem("Mergosari");
+        jComboBox3.addItem("Mindugading");
+        jComboBox3.addItem("Mliriprowo");
+        jComboBox3.addItem("Sebani");
+        jComboBox3.addItem("Segodobancang");
+        jComboBox3.addItem("Singogalih");
+        jComboBox3.addItem("Tarik");
+
+    } else if (kecamatan.equals("Prambon")) {
+
+        jComboBox3.addItem("Bendotretek");
+        jComboBox3.addItem("Bulang");
+        jComboBox3.addItem("Cangkringturi");
+        jComboBox3.addItem("Gampang");
+        jComboBox3.addItem("Gedangrowo");
+        jComboBox3.addItem("Jati Alun Alun");
+        jComboBox3.addItem("Jatikalang");
+        jComboBox3.addItem("Jedongcangkring");
+        jComboBox3.addItem("Kajartengguli");
+        jComboBox3.addItem("Kedungkembar");
+        jComboBox3.addItem("Kedungsugo");
+        jComboBox3.addItem("Kedungwonokerto");
+        jComboBox3.addItem("Pejangkungan");
+        jComboBox3.addItem("Prambon");
+        jComboBox3.addItem("Simogirang");
+        jComboBox3.addItem("Simpang");
+        jComboBox3.addItem("Temu");
+        jComboBox3.addItem("Watutulis");
+        jComboBox3.addItem("Wirobiting");
+        jComboBox3.addItem("Wono Plintahan");
+
+    } else if (kecamatan.equals("Krian")) {
+
+        jComboBox3.addItem("Barengkrajan");
+        jComboBox3.addItem("Jatikalang");
+        jComboBox3.addItem("Kater");
+        jComboBox3.addItem("Krian");
+        jComboBox3.addItem("Kraton");
+        jComboBox3.addItem("Kemasan");
+        jComboBox3.addItem("Sidomukti");
+        jComboBox3.addItem("Tambak");
+        jComboBox3.addItem("Terung Kulon");
+        jComboBox3.addItem("Terung Wetan");
+        jComboBox3.addItem("Watugolong");
+        jComboBox3.addItem("Junwangi");
+        jComboBox3.addItem("Ponokawan");
+        jComboBox3.addItem("Sedenganmijen");
+        jComboBox3.addItem("Sidomojo");
+        jComboBox3.addItem("Tropodo");
+        jComboBox3.addItem("Gamping");
+        jComboBox3.addItem("Keboharan");
+        jComboBox3.addItem("Kandangan");
+
+    }
+}
     private void cmb_kelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_kelasActionPerformed
-        // TODO add your handling code here:
+       updateKelas();  // TODO add your handling code here:
     }//GEN-LAST:event_cmb_kelasActionPerformed
 
     private void id_siswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_siswaActionPerformed
@@ -337,35 +613,176 @@ public class siswa extends javax.swing.JFrame {
     }//GEN-LAST:event_id_siswaActionPerformed
 
     private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
-                                          
-    String id = id_siswa.getText();
-    String nama = txt_nama.getText();
-    String kelas = cmb_kelas.getSelectedItem().toString();
 
-    if (id.isEmpty() || nama.isEmpty()) {
-        JOptionPane.showMessageDialog(this, 
-                "ID Siswa dan Nama harus diisi!");
+    // Mengambil data dari TextField dan ComboBox
+    String nisn = id_siswa.getText().trim();
+    String nama = txt_nama.getText().trim();
+    String jurusan = cmb_kelas.getSelectedItem().toString();
+    
+
+    String kota = jComboBox1.getSelectedItem().toString();
+    String kecamatan = jComboBox2.getSelectedItem().toString();
+    String desa = jComboBox3.getSelectedItem().toString();
+    String alamat = jTextField2.getText().trim();
+
+    // Mengambil tingkat kelas (X, XI, XII)
+    String tingkat = "";
+
+    if (jRadioButton1.isSelected()) {
+        tingkat = "X";
+    } else if (jRadioButton2.isSelected()) {
+        tingkat = "XI";
+    } else if (jRadioButton3.isSelected()) {
+        tingkat = "XII";
+    }
+
+    // Mengambil nomor kelas (1, 2, 3)
+    String nomorKelas = "";
+
+    if (jRadioButton4.isSelected()) {
+        nomorKelas = "1";
+    } else if (jRadioButton5.isSelected()) {
+        nomorKelas = "2";
+    } else if (jRadioButton6.isSelected()) {
+        nomorKelas = "3";
+    }
+
+    // Validasi input
+    if (nisn.isEmpty() || nama.isEmpty() || alamat.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "NISN, Nama, dan Dsn/Jl harus diisi!");
         return;
     }
 
-    String tanggal = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+    if (tingkat.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Pilih tingkat kelas terlebih dahulu!");
+        return;
+    }
 
+    if (nomorKelas.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Pilih nomor kelas terlebih dahulu!");
+        return;
+    }
+
+    // Menggabungkan tingkat dan nomor kelas
+    String kelas = tingkat + "-" + nomorKelas;
+
+    // Mengambil tanggal lahir dari kalender
+Date tanggalLahir = jDateChooser1.getDate();
+
+if (tanggalLahir == null) {
+    JOptionPane.showMessageDialog(this,
+            "Tanggal lahir harus diisi!");
+    return;
+}
+    String tanggalLahirFormat = new SimpleDateFormat("dd-MM-yyyy")
+        .format(tanggalLahir);
+
+    // Memasukkan data ke tabel
     model.addRow(new Object[]{
-        id,
+        nisn,
         nama,
+        jurusan,
         kelas,
-        tanggal
+        tanggalLahirFormat,
+        kota,
+        kecamatan,
+        desa,
+        alamat
     });
 
+    // Reset form setelah data berhasil ditambahkan
     id_siswa.setText("");
     txt_nama.setText("");
-    cmb_kelas.setSelectedIndex(0);
+    jTextField2.setText("");
 
-    JOptionPane.showMessageDialog(this, 
-            "Data siswa berhasil ditambahkan!");        // TODO add your handling code here:
+    jRadioButton1.setSelected(false);
+    jRadioButton2.setSelected(false);
+    jRadioButton3.setSelected(false);
+
+    jRadioButton4.setSelected(false);
+    jRadioButton5.setSelected(false);
+    jRadioButton6.setSelected(false);
+
+    cmb_kelas.setSelectedIndex(0);
+    jComboBox1.setSelectedIndex(0);
+
+    updateKecamatan();
+    updateDesa();
+
+    JOptionPane.showMessageDialog(this,
+            "Data siswa berhasil ditambahkan!");
+
+       // TODO add your handling code here:
     }//GEN-LAST:event_btn_tambahActionPerformed
 
     private void tabel_siswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_siswaMouseClicked
+
+
+    int baris = tabel_siswa.getSelectedRow();
+
+    if (baris == -1) {
+        return;
+    }
+
+    // Mengambil data dari tabel
+    id_siswa.setText(model.getValueAt(baris, 0).toString());
+    txt_nama.setText(model.getValueAt(baris, 1).toString());
+
+    cmb_kelas.setSelectedItem(model.getValueAt(baris, 2).toString());
+
+    String kelas = model.getValueAt(baris, 3).toString();
+
+    String kota = model.getValueAt(baris, 5).toString();
+    String kecamatan = model.getValueAt(baris, 6).toString();
+    String desa = model.getValueAt(baris, 7).toString();
+    String alamat = model.getValueAt(baris, 8).toString();
+
+    jTextField2.setText(alamat);
+
+    // Memisahkan tingkat dan nomor kelas
+    String[] bagianKelas = kelas.split("-");
+
+    if (bagianKelas.length == 2) {
+
+        String tingkat = bagianKelas[0];
+        String nomor = bagianKelas[1];
+
+        // Memilih tingkat
+        if (tingkat.equals("X")) {
+            jRadioButton1.setSelected(true);
+        } else if (tingkat.equals("XI")) {
+            jRadioButton2.setSelected(true);
+        } else if (tingkat.equals("XII")) {
+            jRadioButton3.setSelected(true);
+        }
+
+        // Memilih nomor kelas
+        if (nomor.equals("1")) {
+            jRadioButton4.setSelected(true);
+        } else if (nomor.equals("2")) {
+            jRadioButton5.setSelected(true);
+        } else if (nomor.equals("3")) {
+            jRadioButton6.setSelected(true);
+        }
+    }
+
+    // Mengisi ComboBox Kabupaten
+    jComboBox1.setSelectedItem(kota);
+
+    // Memperbarui kecamatan
+    updateKecamatan();
+
+    // Mengisi ComboBox Kecamatan
+    jComboBox2.setSelectedItem(kecamatan);
+
+    // Memperbarui desa
+    updateDesa();
+
+    // Mengisi ComboBox Desa
+    jComboBox3.setSelectedItem(desa);
     // TODO add your handling code here:
     }//GEN-LAST:event_tabel_siswaMouseClicked
 
@@ -398,7 +815,7 @@ public class siswa extends javax.swing.JFrame {
     }
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_hapusActionPerformed
-
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -414,6 +831,7 @@ public class siswa extends javax.swing.JFrame {
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         // TODO add your handling code here:
+        updateDesa();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
@@ -422,7 +840,146 @@ public class siswa extends javax.swing.JFrame {
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton6ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+ updateKecamatan();        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+    String nisn = id_siswa.getText().trim();
+
+    if (nisn.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Masukkan NISN yang ingin dicari!");
+        return;
+    }
+
+    boolean ditemukan = false;
+
+    for (int i = 0; i < tabel_siswa.getRowCount(); i++) {
+
+        String nisnTabel = tabel_siswa.getValueAt(i, 0).toString();
+
+        if (nisnTabel.equals(nisn)) {
+
+            tabel_siswa.setRowSelectionInterval(i, i);
+
+            tabel_siswa.scrollRectToVisible(
+                    tabel_siswa.getCellRect(i, 0, true)
+            );
+
+            ditemukan = true;
+            break;
+        }
+    }
+
+    if (ditemukan) {
+
+        JOptionPane.showMessageDialog(this,
+                "Data siswa ditemukan!");
+
+    } else {
+
+        JOptionPane.showMessageDialog(this,
+                "Data siswa tidak ditemukan!");
+    }// TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+    int baris = tabel_siswa.getSelectedRow();
+
+    // Validasi pemilihan baris
+    if (baris == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Pilih data siswa yang ingin diedit!");
+        return;
+    }
+
+    // Mengambil data dari form
+    String nisn = id_siswa.getText().trim();
+    String nama = txt_nama.getText().trim();
+    String jurusan = cmb_kelas.getSelectedItem().toString();
+
+    String kota = jComboBox1.getSelectedItem().toString();
+    String kecamatan = jComboBox2.getSelectedItem().toString();
+    String desa = jComboBox3.getSelectedItem().toString();
+    String alamat = jTextField2.getText().trim();
+
+    // Mengambil tingkat kelas
+    String tingkat = "";
+
+    if (jRadioButton1.isSelected()) {
+        tingkat = "X";
+    } else if (jRadioButton2.isSelected()) {
+        tingkat = "XI";
+    } else if (jRadioButton3.isSelected()) {
+        tingkat = "XII";
+    }
+
+    // Mengambil nomor kelas
+    String nomorKelas = "";
+
+    if (jRadioButton4.isSelected()) {
+        nomorKelas = "1";
+    } else if (jRadioButton5.isSelected()) {
+        nomorKelas = "2";
+    } else if (jRadioButton6.isSelected()) {
+        nomorKelas = "3";
+    }
+
+    // Validasi data
+    if (nisn.isEmpty() || nama.isEmpty() || alamat.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "NISN, Nama, dan Dsn/Jl harus diisi!");
+        return;
+    }
+
+    if (tingkat.isEmpty() || nomorKelas.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Tingkat dan nomor kelas harus dipilih!");
+        return;
+    }
+
+    String kelas = tingkat + "-" + nomorKelas;
+
+    // Validasi NISN duplikat
+    for (int i = 0; i < tabel_siswa.getRowCount(); i++) {
+
+        if (i != baris) {
+
+            String nisnTabel = model.getValueAt(i, 0).toString();
+
+            if (nisnTabel.equals(nisn)) {
+                JOptionPane.showMessageDialog(this,
+                        "NISN sudah digunakan siswa lain!");
+                return;
+            }
+        }
+    }
+
+    // Memperbarui data pada baris yang dipilih
+    model.setValueAt(nisn, baris, 0);
+    model.setValueAt(nama, baris, 1);
+    model.setValueAt(jurusan, baris, 2);
+    model.setValueAt(kelas, baris, 3);
+    model.setValueAt(kota, baris, 5);
+    model.setValueAt(kecamatan, baris, 6);
+    model.setValueAt(desa, baris, 7);
+    model.setValueAt(alamat, baris, 8);
+
+    JOptionPane.showMessageDialog(this,
+            "Data siswa berhasil diperbarui!");
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -476,7 +1033,9 @@ public class siswa extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton6;
+    private javax.swing.JRadioButton jRadioButton7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTable tabel_siswa;
     private javax.swing.JTextField txt_nama;

@@ -4,6 +4,8 @@
  */
 package BK_SMKN1Dlanggu;
 import javax.swing.JOptionPane;
+import javax.swing.ButtonGroup;
+import java.text.ParseException;
 /**
  *
  * @author 16_Devin_X-RPL-3#
@@ -11,13 +13,46 @@ import javax.swing.JOptionPane;
 public class pelanggaran extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(pelanggaran.class.getName());
+    private ButtonGroup buttonGroupTingkat;
+    private ButtonGroup buttonGroupNomor;
 
     /**
      * Creates new form pelanggaran
      */
     public pelanggaran() {
         initComponents();
+
+    buttonGroupTingkat = new ButtonGroup();
+    buttonGroupTingkat.add(jRadioButton4);
+    buttonGroupTingkat.add(jRadioButton5);
+    buttonGroupTingkat.add(jRadioButton6);
+
+    buttonGroupNomor = new ButtonGroup();
+    buttonGroupNomor.add(jRadioButton1);
+    buttonGroupNomor.add(jRadioButton2);
+    buttonGroupNomor.add(jRadioButton3);
+    
+    updateNomorKelas();
     }
+    
+    private void updateNomorKelas() {
+
+    String jurusan = jComboBox2.getSelectedItem().toString();
+
+    // Awalnya semua kelas aktif
+    jRadioButton1.setEnabled(true);
+    jRadioButton2.setEnabled(true);
+    jRadioButton3.setEnabled(true);
+
+    // DKV, KL, dan PHT hanya memiliki 2 kelas
+    if (jurusan.equalsIgnoreCase("DKV")
+            || jurusan.equalsIgnoreCase("KL")
+            || jurusan.equalsIgnoreCase("PHT")) {
+
+        jRadioButton3.setEnabled(false);
+        jRadioButton3.setSelected(false);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,6 +78,12 @@ public class pelanggaran extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jRadioButton5 = new javax.swing.JRadioButton();
+        jRadioButton6 = new javax.swing.JRadioButton();
         jMenuBar1 = new javax.swing.JMenuBar();
 
         jCheckBox1.setText("jCheckBox1");
@@ -96,7 +137,7 @@ public class pelanggaran extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Kelas/Jurusan");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "XI RPL1", "XI RPL2", "XI RPL3" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RPL", "TKJ", "DKV", "PHT", "KL", "ANM" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -120,6 +161,33 @@ public class pelanggaran extends javax.swing.JFrame {
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton1.setText("1");
+
+        jRadioButton2.setText("2");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton3.setText("3");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton4.setText("X");
+
+        jRadioButton5.setText("XI");
+
+        jRadioButton6.setText("XII");
+        jRadioButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton6ActionPerformed(evt);
             }
         });
 
@@ -147,27 +215,37 @@ public class pelanggaran extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addGap(23, 23, 23)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel5))
-                                        .addGap(31, 31, 31)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(51, 51, 51)
-                                                .addComponent(jLabel6)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(jRadioButton4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jRadioButton5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jRadioButton6))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jRadioButton1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jRadioButton2)
+                                                .addGap(12, 12, 12)
+                                                .addComponent(jRadioButton3))))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(265, 265, 265)
                                 .addComponent(jButton1)))
-                        .addGap(0, 186, Short.MAX_VALUE)))
+                        .addGap(0, 129, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -192,15 +270,25 @@ public class pelanggaran extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jRadioButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton6))
+                .addGap(1, 1, 1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(154, Short.MAX_VALUE))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
 
         pack();
@@ -220,6 +308,7 @@ public class pelanggaran extends javax.swing.JFrame {
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         // TODO add your handling code here:
+            updateNomorKelas();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
@@ -231,53 +320,122 @@ public class pelanggaran extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+                                      
 
     // Ambil data dari input
-    String idSiswa = jTextField1.getText().trim();
+    String nisnSiswa = jTextField1.getText().trim();
     String nama = jTextField2.getText().trim();
-    String kelas = jComboBox2.getSelectedItem().toString();
+    String jurusan = jComboBox2.getSelectedItem().toString();
     String status = jComboBox1.getSelectedItem().toString();
     String keterangan = jTextField3.getText().trim();
 
-    // Validasi input
-    if (idSiswa.isEmpty()
+    // Mengambil tingkat kelas
+    String tingkat = "";
+
+    if (jRadioButton4.isSelected()) {
+        tingkat = "X";
+    } else if (jRadioButton5.isSelected()) {
+        tingkat = "XI";
+    } else if (jRadioButton6.isSelected()) {
+        tingkat = "XII";
+    }
+
+    // Mengambil nomor kelas
+    String nomorKelas = "";
+
+    if (jRadioButton1.isSelected()) {
+        nomorKelas = "1";
+    } else if (jRadioButton2.isSelected()) {
+        nomorKelas = "2";
+    } else if (jRadioButton3.isSelected()) {
+        nomorKelas = "3";
+    }
+
+    // Validasi input wajib
+    if (nisnSiswa.isEmpty()
             || nama.isEmpty()
             || keterangan.isEmpty()) {
 
-        JOptionPane.showMessageDialog(
-                this,
-                "ID siswa, nama, dan keterangan wajib diisi!"
-        );
+        JOptionPane.showMessageDialog(this,
+                "ID siswa, nama, dan keterangan wajib diisi!");
         return;
     }
 
-    // Kirim data ke penyimpanan laporan
+    // Validasi tingkat kelas
+    if (tingkat.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Pilih tingkat kelas terlebih dahulu!");
+        return;
+    }
+
+    // Validasi nomor kelas
+    if (nomorKelas.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Pilih nomor kelas terlebih dahulu!");
+        return;
+    }
+
+    // Validasi jurusan yang hanya memiliki 2 kelas
+    if ((jurusan.equalsIgnoreCase("DKV")
+            || jurusan.equalsIgnoreCase("KL")
+            || jurusan.equalsIgnoreCase("PHT"))
+            && nomorKelas.equals("3")) {
+
+        JOptionPane.showMessageDialog(this,
+                "Jurusan " + jurusan + " hanya memiliki 2 kelas!");
+        return;
+    }
+
+    // Menggabungkan tingkat dan nomor kelas
+    String kelasLengkap = tingkat + "-" + nomorKelas;
+
+    // Mengirim data laporan
     laporan.tambahDataLaporan(
-            idSiswa,
+            nisnSiswa,
             nama,
-            kelas,
+            jurusan + " " + kelasLengkap,
             status,
             "Pelanggaran: " + keterangan
     );
 
-    JOptionPane.showMessageDialog(
-            this,
-            "Laporan pelanggaran berhasil dikirim!"
-    );
+    JOptionPane.showMessageDialog(this,
+            "Laporan pelanggaran berhasil dikirim!");
 
-    // Kosongkan input setelah berhasil
+    // Reset input
     jTextField1.setText("");
     jTextField2.setText("");
     jTextField3.setText("");
+
     jComboBox1.setSelectedIndex(0);
     jComboBox2.setSelectedIndex(0);
-        // TODO add your handling code here:
+
+    // Reset pilihan tingkat
+    buttonGroupTingkat.clearSelection();
+
+    // Reset pilihan nomor kelas
+    buttonGroupNomor.clearSelection();
+
+    // Update tombol kelas sesuai jurusan default
+    updateNomorKelas();
+ // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton6ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -318,6 +476,12 @@ public class pelanggaran extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

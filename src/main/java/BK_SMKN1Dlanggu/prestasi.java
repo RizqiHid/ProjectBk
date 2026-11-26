@@ -4,6 +4,8 @@
  */
 package BK_SMKN1Dlanggu;
 import javax.swing.JOptionPane;
+import javax.swing.ButtonGroup;
+import java.text.ParseException;
 /**
  *
  * @author 16_Devin_X-RPL-3#
@@ -17,7 +19,36 @@ public class prestasi extends javax.swing.JFrame {
      */
     public prestasi() {
         initComponents();
+        
+        ButtonGroup buttonGroupTingkat = new ButtonGroup();
+        buttonGroupTingkat.add(jRadioButton4);
+buttonGroupTingkat.add(jRadioButton5);
+buttonGroupTingkat.add(jRadioButton6);
+
+ButtonGroup buttonGroupNomor = new ButtonGroup();
+buttonGroupNomor.add(jRadioButton1);
+buttonGroupNomor.add(jRadioButton2);
+buttonGroupNomor.add(jRadioButton3);
     }
+    
+    private void updateNomorKelas() {
+
+    String jurusan = cmb_jurusan.getSelectedItem().toString();
+
+    // Awalnya semua kelas aktif
+    jRadioButton1.setEnabled(true);
+    jRadioButton2.setEnabled(true);
+    jRadioButton3.setEnabled(true);
+
+    // DKV, KL, dan PHT hanya memiliki 2 kelas
+    if (jurusan.equalsIgnoreCase("DKV")
+            || jurusan.equalsIgnoreCase("KL")
+            || jurusan.equalsIgnoreCase("PHT")) {
+
+        jRadioButton3.setEnabled(false);
+        jRadioButton3.setSelected(false);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,7 +61,7 @@ public class prestasi extends javax.swing.JFrame {
 
         jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cmb_jurusan = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -41,6 +72,12 @@ public class prestasi extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jRadioButton5 = new javax.swing.JRadioButton();
+        jRadioButton6 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,10 +87,10 @@ public class prestasi extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Laporan Prestasi");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "XI RPL1", "XI RPL2", "XI RPL3" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        cmb_jurusan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RPL", "TKJ", "DKV", "PHT", "KL", "ANM" }));
+        cmb_jurusan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                cmb_jurusanActionPerformed(evt);
             }
         });
 
@@ -111,6 +148,28 @@ public class prestasi extends javax.swing.JFrame {
             }
         });
 
+        jRadioButton1.setText("1");
+
+        jRadioButton2.setText("2");
+
+        jRadioButton3.setText("3");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton4.setText("X");
+        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton4ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton5.setText("XI");
+
+        jRadioButton6.setText("XII");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,29 +184,40 @@ public class prestasi extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel5))
-                                        .addGap(31, 31, 31)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(51, 51, 51)
-                                                .addComponent(jLabel6)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(262, 262, 262)
+                                .addComponent(jButton1))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(265, 265, 265)
-                                .addComponent(jButton1)))
-                        .addGap(0, 186, Short.MAX_VALUE)))
+                                .addGap(31, 31, 31)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(23, 23, 23)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(cmb_jurusan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jRadioButton1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jRadioButton2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jRadioButton3))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jRadioButton4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jRadioButton5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jRadioButton6)))))))
+                        .addGap(0, 190, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -171,24 +241,35 @@ public class prestasi extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmb_jurusan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jRadioButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41)
+                .addGap(70, 70, 70)
                 .addComponent(jButton1)
-                .addContainerGap(154, Short.MAX_VALUE))
+                .addGap(74, 74, 74))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void cmb_jurusanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_jurusanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+         updateNomorKelas();
+    }//GEN-LAST:event_cmb_jurusanActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -199,46 +280,88 @@ public class prestasi extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+String nisnSiswa = jTextField1.getText().trim();
+String nama = jTextField2.getText().trim();
+String kelas = cmb_jurusan.getSelectedItem().toString();
+String status = jComboBox1.getSelectedItem().toString();
+String keterangan = jTextField3.getText().trim();
 
-    // Ambil data dari input
-    String idSiswa = jTextField1.getText().trim();
-    String nama = jTextField2.getText().trim();
-    String kelas = jComboBox2.getSelectedItem().toString();
-    String status = jComboBox1.getSelectedItem().toString();
-    String keterangan = jTextField3.getText().trim();
+// Mengambil tingkat kelas
+String tingkat = "";
 
-    // Validasi input
-    if (idSiswa.isEmpty()
-            || nama.isEmpty()
-            || keterangan.isEmpty()) {
+if (jRadioButton4.isSelected()) {
+    tingkat = "X";
+} else if (jRadioButton5.isSelected()) {
+    tingkat = "XI";
+} else if (jRadioButton6.isSelected()) {
+    tingkat = "XII";
+}
 
-        JOptionPane.showMessageDialog(
-                this,
-                "ID siswa, nama, dan keterangan wajib diisi!"
-        );
-        return;
-    }
+// Mengambil nomor kelas
+String nomorKelas = "";
 
-    // Kirim data ke penyimpanan laporan
-    laporan.tambahDataLaporan(
-            idSiswa,
-            nama,
-            kelas,
-            status,
-            "Prestasi: " + keterangan
-    );
+if (jRadioButton1.isSelected()) {
+    nomorKelas = "1";
+} else if (jRadioButton2.isSelected()) {
+    nomorKelas = "2";
+} else if (jRadioButton3.isSelected()) {
+    nomorKelas = "3";
+}
 
-    JOptionPane.showMessageDialog(
-            this,
-            "Laporan prestasi berhasil dikirim!"
-    );
+// Validasi input
+if (nisnSiswa.isEmpty()
+        || nama.isEmpty()
+        || keterangan.isEmpty()) {
 
-    // Kosongkan input setelah berhasil
-    jTextField1.setText("");
-    jTextField2.setText("");
-    jTextField3.setText("");
-    jComboBox1.setSelectedIndex(0);
-    jComboBox2.setSelectedIndex(0);        // TODO add your handling code here:
+    JOptionPane.showMessageDialog(this,
+            "NISN, nama, dan keterangan wajib diisi!");
+    return;
+}
+
+if (tingkat.isEmpty()) {
+    JOptionPane.showMessageDialog(this,
+            "Pilih tingkat kelas terlebih dahulu!");
+    return;
+}
+
+if (nomorKelas.isEmpty()) {
+    JOptionPane.showMessageDialog(this,
+            "Pilih nomor kelas terlebih dahulu!");
+    return;
+}
+
+// Menggabungkan tingkat dan nomor kelas
+String kelasLengkap = tingkat + "-" + nomorKelas;
+
+// Kirim data laporan
+laporan.tambahDataLaporan(
+        nisnSiswa,
+        nama,
+        kelas,
+        status,
+        "Prestasi: " + keterangan
+);
+
+JOptionPane.showMessageDialog(this,
+        "Laporan prestasi berhasil dikirim!");
+
+// Reset input
+jTextField1.setText("");
+jTextField2.setText("");
+jTextField3.setText("");
+
+jComboBox1.setSelectedIndex(0);
+cmb_jurusan.setSelectedIndex(0);
+
+jRadioButton4.setSelected(false);
+jRadioButton5.setSelected(false);
+jRadioButton6.setSelected(false);
+
+jRadioButton1.setSelected(false);
+jRadioButton2.setSelected(false);
+jRadioButton3.setSelected(false);
+
+updateNomorKelas();    // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -253,6 +376,14 @@ public class prestasi extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -280,16 +411,22 @@ public class prestasi extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cmb_jurusan;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
