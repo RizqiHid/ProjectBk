@@ -339,7 +339,7 @@ laporan.tambahDataLaporan(
         nama,
         kelas,
         status,
-        "Prestasi: " + keterangan
+        "prestasi" + keterangan
 );
 
 JOptionPane.showMessageDialog(this,

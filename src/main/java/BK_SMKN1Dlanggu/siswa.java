@@ -3,59 +3,210 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package BK_SMKN1Dlanggu;
+import javax.swing.JOptionPane;
+import javax.swing.ButtonGroup;
+import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ButtonGroup;
 import java.text.ParseException;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
  *
  * @author 16_Devin_X-RPL-3#
  */
 public class siswa extends javax.swing.JFrame {
-    DefaultTableModel model;
+    private DefaultTableModel model;
     
-    
+      private void tampilData() {
+
+    model.setRowCount(0);
+
+    String sql = "SELECT * FROM siswa";
+    try (Connection conn = Koneksi.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+
+            Object[] data = {
+                rs.getString("nisn"),
+                rs.getString("nama"),
+                rs.getString("jurusan"),
+                rs.getString("tingkat") + " " +
+                    rs.getString("rombel"),
+                rs.getDate("tanggal_lahir"),
+                rs.getString("kota_kab"),
+                rs.getString("kecamatan"),
+                rs.getString("desa"),
+                rs.getString("dusun_jalan")
+            };
+
+            model.addRow(data);
+        }
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this,
+            "Gagal menampilkan data: " + e.getMessage());
+    }
+}
+      private void tambahData() {
+
+  String nisn = id_siswa.getText().trim();
+
+if (!nisn.matches("[0-9]{10}")) {
+    JOptionPane.showMessageDialog(this,
+            "NISN harus terdiri dari 10 angka!");
+    id_siswa.requestFocus();
+    return;
+}
+    String nama = txt_nama.getText().trim();
+
+    String jurusan = cmb_kelas.getSelectedItem().toString();
+
+    String tingkat = "";
+    String rombel = "";
+
+    // Mengambil pilihan angka
+    if (jRadioButton1.isSelected()) rombel = "1";
+    else if (jRadioButton2.isSelected()) rombel = "2";
+    else if (jRadioButton3.isSelected()) rombel = "3";
+
+    // Mengambil pilihan tingkat
+    if (jRadioButton4.isSelected()) tingkat = "X";
+    else if (jRadioButton5.isSelected()) tingkat = "XI";
+    else if (jRadioButton6.isSelected()) tingkat = "XII";
+
+    // Validasi input
+    if (nisn.isEmpty() || nama.isEmpty()
+            || tingkat.isEmpty() || rombel.isEmpty()
+            || jDateChooser1.getDate() == null) {
+
+        JOptionPane.showMessageDialog(this,
+                "Lengkapi semua data terlebih dahulu!");
+        return;
+    }
+
+    String sql = "INSERT INTO siswa "
+            + "(nisn, nama, jurusan, tingkat, rombel, "
+            + "tanggal_lahir, kota_kab, kecamatan, desa, dusun_jalan) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    try (Connection conn = Koneksi.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "Database tidak terhubung!");
+            return;
+        }
+
+        ps.setString(1, nisn);
+        ps.setString(2, nama);
+        ps.setString(3, jurusan);
+        ps.setString(4, tingkat);
+        ps.setInt(5, Integer.parseInt(rombel));
+
+        Date tanggal = jDateChooser1.getDate();
+
+        ps.setDate(6, new java.sql.Date(tanggal.getTime()));
+
+        ps.setString(7, jComboBox1.getSelectedItem().toString());
+        ps.setString(8, jComboBox2.getSelectedItem().toString());
+        ps.setString(9, jComboBox3.getSelectedItem().toString());
+        ps.setString(10, jTextField2.getText());
+
+        ps.executeUpdate();
+
+        JOptionPane.showMessageDialog(this,
+                "Data siswa berhasil ditambahkan!");
+
+        tampilData();
+        kosongkanForm();
+
+    } catch (SQLException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Gagal menambahkan data: " + e.getMessage());
+    }
+}
+      
+      private void kosongkanForm() {
+
+    id_siswa.setText("");
+    txt_nama.setText("");
+
+    cmb_kelas.setSelectedIndex(0);
+
+    jDateChooser1.setDate(null);
+
+    jComboBox1.setSelectedIndex(0);
+    jComboBox2.setSelectedIndex(0);
+    jComboBox3.setSelectedIndex(0);
+
+    jTextField2.setText("");
+
+    grupResetAngka();
+}
+      
+      private void grupResetAngka() {
+
+    jRadioButton1.setSelected(false);
+    jRadioButton2.setSelected(false);
+    jRadioButton3.setSelected(false);
+
+    jRadioButton4.setSelected(false);
+    jRadioButton5.setSelected(false);
+    jRadioButton6.setSelected(false);
+}
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(siswa.class.getName());
 
-    /**
-     * Creates new form siswa
-     */
+     
+   
     public siswa() {
-        initComponents();
-        // Group tingkat kelas
-ButtonGroup groupTingkat = new ButtonGroup();
+    initComponents();
 
-groupTingkat.add(jRadioButton1); // X
-groupTingkat.add(jRadioButton2); // XI
-groupTingkat.add(jRadioButton3); // XII
+    // Group tingkat kelas
+    ButtonGroup groupTingkat = new ButtonGroup();
+    groupTingkat.add(jRadioButton1);
+    groupTingkat.add(jRadioButton2);
+    groupTingkat.add(jRadioButton3);
 
-
-// Group nomor kelas
-ButtonGroup groupNomor = new ButtonGroup();
-
-groupNomor.add(jRadioButton4); // 1
-groupNomor.add(jRadioButton5); // 2
-groupNomor.add(jRadioButton6); // 3
+    // Group nomor kelas
+    ButtonGroup groupNomor = new ButtonGroup();
+    groupNomor.add(jRadioButton4);
+    groupNomor.add(jRadioButton5);
+    groupNomor.add(jRadioButton6);
 
     model = new DefaultTableModel();
 
-model.addColumn("NISN");
-model.addColumn("Nama");
-model.addColumn("Jurusan");
-model.addColumn("Kelas");
-model.addColumn("Tanggal Lahir");
-model.addColumn("Kota/Kab");
-model.addColumn("Kecamatan");
-model.addColumn("Desa");
-model.addColumn("Dsn/Jl");
+    model.addColumn("NISN");
+    model.addColumn("Nama");
+    model.addColumn("Jurusan");
+    model.addColumn("Kelas");
+    model.addColumn("Tanggal Lahir");
+    model.addColumn("Kota/Kab");
+    model.addColumn("Kecamatan");
+    model.addColumn("Desa");
+    model.addColumn("Dsn/Jl");
 
-tabel_siswa.setModel(model);
+    tabel_siswa.setModel(model);
 
-    }
-    
+    // Mengatur tombol berdasarkan jurusan
+    cmb_kelas.addActionListener(e -> updateKelas());
+    updateKelas();
+
+    // Menampilkan data database
+    tampilData();
+}
     private void updateKelas() {
 
     Object pilihan = cmb_kelas.getSelectedItem();
@@ -449,35 +600,12 @@ tabel_siswa.setModel(model);
     // KABUPATEN MOJOKERTO
     if (kecamatan.equals("Puri")) {
 
-        jComboBox3.addItem("Balongmojo");
-        jComboBox3.addItem("Banjaragung");
-        jComboBox3.addItem("Brayung");
-        jComboBox3.addItem("Kebonagung");
-        jComboBox3.addItem("Kenanten");
-        jComboBox3.addItem("Ketemasdungus");
-        jComboBox3.addItem("Kintelan");
-        jComboBox3.addItem("Medali");
         jComboBox3.addItem("Mlaten");
-        jComboBox3.addItem("Plososari");
         jComboBox3.addItem("Puri");
-        jComboBox3.addItem("Sumbergirang");
-        jComboBox3.addItem("Sumolawang");
-        jComboBox3.addItem("Tambakagung");
-        jComboBox3.addItem("Tampungrejo");
         jComboBox3.addItem("Tangunan");
 
     } else if (kecamatan.equals("Trawas")) {
 
-        jComboBox3.addItem("Belik");
-        jComboBox3.addItem("Duyung");
-        jComboBox3.addItem("Jatijejer");
-        jComboBox3.addItem("Kedungudi");
-        jComboBox3.addItem("Kesiman");
-        jComboBox3.addItem("Ketapanrame");
-        jComboBox3.addItem("Penanggungan");
-        jComboBox3.addItem("Seloliman");
-        jComboBox3.addItem("Selotapak");
-        jComboBox3.addItem("Sugeng");
         jComboBox3.addItem("Sukosari");
         jComboBox3.addItem("Tamiajeng");
         jComboBox3.addItem("Trawas");
@@ -485,19 +613,6 @@ tabel_siswa.setModel(model);
     } else if (kecamatan.equals("Dlanggu")) {
 
         jComboBox3.addItem("Dlanggu");
-        jComboBox3.addItem("Jrambe");
-        jComboBox3.addItem("Kedunggede");
-        jComboBox3.addItem("Kedunglengkong");
-        jComboBox3.addItem("Kedungwungu");
-        jComboBox3.addItem("Ngembeh");
-        jComboBox3.addItem("Pohkecik");
-        jComboBox3.addItem("Segunung");
-        jComboBox3.addItem("Sumberkarang");
-        jComboBox3.addItem("Sumbersono");
-        jComboBox3.addItem("Talok");
-        jComboBox3.addItem("Tarik");
-        jComboBox3.addItem("Watukosek");
-        jComboBox3.addItem("Punggul");
         jComboBox3.addItem("Randegan");
         jComboBox3.addItem("Pandean");
 
@@ -508,9 +623,6 @@ tabel_siswa.setModel(model);
 
         jComboBox3.addItem("Gunung Gedangan");
         jComboBox3.addItem("Kedundung");
-        jComboBox3.addItem("Balongsari");
-        jComboBox3.addItem("Gedongan");
-        jComboBox3.addItem("Magersari");
         jComboBox3.addItem("Wates");
 
     } else if (kecamatan.equals("Prajurit Kulon")) {
@@ -518,10 +630,7 @@ tabel_siswa.setModel(model);
         jComboBox3.addItem("Surodinawan");
         jComboBox3.addItem("Prajurit Kulon");
         jComboBox3.addItem("Blooto");
-        jComboBox3.addItem("Mentikan");
-        jComboBox3.addItem("Kauman");
-        jComboBox3.addItem("Pulorejo");
-
+        
     } else if (kecamatan.equals("Kranggan")) {
 
         jComboBox3.addItem("Kranggan");
@@ -539,69 +648,18 @@ tabel_siswa.setModel(model);
         jComboBox3.addItem("Balongmacekan");
         jComboBox3.addItem("Banjarwungu");
         jComboBox3.addItem("Gampingrowo");
-        jComboBox3.addItem("Gempolklutuk");
-        jComboBox3.addItem("Janti");
-        jComboBox3.addItem("Kalimati");
-        jComboBox3.addItem("Kedinding");
-        jComboBox3.addItem("Kedungbocok");
-        jComboBox3.addItem("Kemuning");
-        jComboBox3.addItem("Kendalsewu");
-        jComboBox3.addItem("Klantingsari");
-        jComboBox3.addItem("Kramat Temenggung");
-        jComboBox3.addItem("Mergobener");
-        jComboBox3.addItem("Mergosari");
-        jComboBox3.addItem("Mindugading");
-        jComboBox3.addItem("Mliriprowo");
-        jComboBox3.addItem("Sebani");
-        jComboBox3.addItem("Segodobancang");
-        jComboBox3.addItem("Singogalih");
-        jComboBox3.addItem("Tarik");
 
     } else if (kecamatan.equals("Prambon")) {
 
         jComboBox3.addItem("Bendotretek");
         jComboBox3.addItem("Bulang");
         jComboBox3.addItem("Cangkringturi");
-        jComboBox3.addItem("Gampang");
-        jComboBox3.addItem("Gedangrowo");
-        jComboBox3.addItem("Jati Alun Alun");
-        jComboBox3.addItem("Jatikalang");
-        jComboBox3.addItem("Jedongcangkring");
-        jComboBox3.addItem("Kajartengguli");
-        jComboBox3.addItem("Kedungkembar");
-        jComboBox3.addItem("Kedungsugo");
-        jComboBox3.addItem("Kedungwonokerto");
-        jComboBox3.addItem("Pejangkungan");
-        jComboBox3.addItem("Prambon");
-        jComboBox3.addItem("Simogirang");
-        jComboBox3.addItem("Simpang");
-        jComboBox3.addItem("Temu");
-        jComboBox3.addItem("Watutulis");
-        jComboBox3.addItem("Wirobiting");
-        jComboBox3.addItem("Wono Plintahan");
 
     } else if (kecamatan.equals("Krian")) {
 
         jComboBox3.addItem("Barengkrajan");
         jComboBox3.addItem("Jatikalang");
         jComboBox3.addItem("Kater");
-        jComboBox3.addItem("Krian");
-        jComboBox3.addItem("Kraton");
-        jComboBox3.addItem("Kemasan");
-        jComboBox3.addItem("Sidomukti");
-        jComboBox3.addItem("Tambak");
-        jComboBox3.addItem("Terung Kulon");
-        jComboBox3.addItem("Terung Wetan");
-        jComboBox3.addItem("Watugolong");
-        jComboBox3.addItem("Junwangi");
-        jComboBox3.addItem("Ponokawan");
-        jComboBox3.addItem("Sedenganmijen");
-        jComboBox3.addItem("Sidomojo");
-        jComboBox3.addItem("Tropodo");
-        jComboBox3.addItem("Gamping");
-        jComboBox3.addItem("Keboharan");
-        jComboBox3.addItem("Kandangan");
-
     }
 }
     private void cmb_kelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_kelasActionPerformed
@@ -614,8 +672,15 @@ tabel_siswa.setModel(model);
 
     private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
 
-    // Mengambil data dari TextField dan ComboBox
-    String nisn = id_siswa.getText().trim();
+        tambahData();
+      String nisn = id_siswa.getText().trim();
+
+if (!nisn.matches("[0-9]{10}")) {
+    JOptionPane.showMessageDialog(this,
+            "NISN harus terdiri dari 10 angka!");
+    id_siswa.requestFocus();
+    return;
+}
     String nama = txt_nama.getText().trim();
     String jurusan = cmb_kelas.getSelectedItem().toString();
     
@@ -787,32 +852,57 @@ if (tanggalLahir == null) {
     }//GEN-LAST:event_tabel_siswaMouseClicked
 
     private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
-                                        
-    int baris = tabel_siswa.getSelectedRow();
+int baris = tabel_siswa.getSelectedRow();
 
-    if (baris == -1) {
-        JOptionPane.showMessageDialog(this, 
-                "Pilih data yang ingin dihapus!");
-        return;
+if (baris == -1) {
+    JOptionPane.showMessageDialog(this,
+            "Pilih data yang ingin dihapus!");
+    return;
+}
+
+int konfirmasi = JOptionPane.showConfirmDialog(
+        this,
+        "Apakah yakin ingin menghapus data ini?",
+        "Konfirmasi",
+        JOptionPane.YES_NO_OPTION
+);
+
+if (konfirmasi == JOptionPane.YES_OPTION) {
+
+    String nisn = model.getValueAt(baris, 0).toString();
+
+    String sql = "DELETE FROM siswa WHERE nisn = ?";
+
+    try {
+        Connection conn = Koneksi.getConnection();
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Database tidak terhubung!");
+            return;
+        }
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nisn);
+
+            int hasil = ps.executeUpdate();
+
+            if (hasil > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Data berhasil dihapus!");
+
+                tampilData();
+                kosongkanForm();
+            }
+        }
+
+        conn.close();
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this,
+                "Gagal menghapus data: " + e.getMessage());
     }
-
-    int konfirmasi = JOptionPane.showConfirmDialog(
-            this,
-            "Apakah yakin ingin menghapus data ini?",
-            "Konfirmasi",
-            JOptionPane.YES_NO_OPTION
-    );
-
-    if (konfirmasi == JOptionPane.YES_OPTION) {
-        model.removeRow(baris);
-
-        id_siswa.setText("");
-        txt_nama.setText("");
-        cmb_kelas.setSelectedIndex(0);
-
-        JOptionPane.showMessageDialog(this, 
-                "Data berhasil dihapus!");
-    }
+}
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_hapusActionPerformed
     
@@ -893,91 +983,97 @@ if (tanggalLahir == null) {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+int baris = tabel_siswa.getSelectedRow();
 
-    int baris = tabel_siswa.getSelectedRow();
+if (baris == -1) {
+    JOptionPane.showMessageDialog(this,
+            "Pilih data siswa yang ingin diedit!");
+    return;
+}
 
-    // Validasi pemilihan baris
-    if (baris == -1) {
+String nisnLama = model.getValueAt(baris, 0).toString();
+
+String nisn = id_siswa.getText().trim();
+String nama = txt_nama.getText().trim();
+String jurusan = cmb_kelas.getSelectedItem().toString();
+
+String tingkat = "";
+if (jRadioButton1.isSelected()) tingkat = "X";
+else if (jRadioButton2.isSelected()) tingkat = "XI";
+else if (jRadioButton3.isSelected()) tingkat = "XII";
+
+String rombel = "";
+if (jRadioButton4.isSelected()) rombel = "1";
+else if (jRadioButton5.isSelected()) rombel = "2";
+else if (jRadioButton6.isSelected()) rombel = "3";
+
+if (nisn.isEmpty() || nama.isEmpty()
+        || tingkat.isEmpty() || rombel.isEmpty()
+        || jDateChooser1.getDate() == null) {
+
+    JOptionPane.showMessageDialog(this,
+            "Lengkapi semua data terlebih dahulu!");
+    return;
+}
+
+// Validasi jumlah kelas berdasarkan jurusan
+if ((jurusan.equals("DKV") || jurusan.equals("PHT")
+        || jurusan.equals("ANM")) && rombel.equals("3")) {
+
+    JOptionPane.showMessageDialog(this,
+            "Jurusan tersebut hanya memiliki kelas 1 dan 2!");
+    return;
+}
+
+String sql = "UPDATE siswa SET "
+        + "nisn=?, nama=?, jurusan=?, tingkat=?, rombel=?, "
+        + "tanggal_lahir=?, kota_kab=?, kecamatan=?, desa=?, dusun_jalan=? "
+        + "WHERE nisn=?";
+
+try {
+    Connection conn = Koneksi.getConnection();
+
+    if (conn == null) {
         JOptionPane.showMessageDialog(this,
-                "Pilih data siswa yang ingin diedit!");
+                "Database tidak terhubung!");
         return;
     }
 
-    // Mengambil data dari form
-    String nisn = id_siswa.getText().trim();
-    String nama = txt_nama.getText().trim();
-    String jurusan = cmb_kelas.getSelectedItem().toString();
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    String kota = jComboBox1.getSelectedItem().toString();
-    String kecamatan = jComboBox2.getSelectedItem().toString();
-    String desa = jComboBox3.getSelectedItem().toString();
-    String alamat = jTextField2.getText().trim();
+        ps.setString(1, nisn);
+        ps.setString(2, nama);
+        ps.setString(3, jurusan);
+        ps.setString(4, tingkat);
+        ps.setInt(5, Integer.parseInt(rombel));
 
-    // Mengambil tingkat kelas
-    String tingkat = "";
+        ps.setDate(6, new java.sql.Date(
+                jDateChooser1.getDate().getTime()));
 
-    if (jRadioButton1.isSelected()) {
-        tingkat = "X";
-    } else if (jRadioButton2.isSelected()) {
-        tingkat = "XI";
-    } else if (jRadioButton3.isSelected()) {
-        tingkat = "XII";
-    }
+        ps.setString(7, jComboBox1.getSelectedItem().toString());
+        ps.setString(8, jComboBox2.getSelectedItem().toString());
+        ps.setString(9, jComboBox3.getSelectedItem().toString());
+        ps.setString(10, jTextField2.getText().trim());
 
-    // Mengambil nomor kelas
-    String nomorKelas = "";
+        ps.setString(11, nisnLama);
 
-    if (jRadioButton4.isSelected()) {
-        nomorKelas = "1";
-    } else if (jRadioButton5.isSelected()) {
-        nomorKelas = "2";
-    } else if (jRadioButton6.isSelected()) {
-        nomorKelas = "3";
-    }
+        int hasil = ps.executeUpdate();
 
-    // Validasi data
-    if (nisn.isEmpty() || nama.isEmpty() || alamat.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-                "NISN, Nama, dan Dsn/Jl harus diisi!");
-        return;
-    }
+        if (hasil > 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Data siswa berhasil diperbarui!");
 
-    if (tingkat.isEmpty() || nomorKelas.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-                "Tingkat dan nomor kelas harus dipilih!");
-        return;
-    }
-
-    String kelas = tingkat + "-" + nomorKelas;
-
-    // Validasi NISN duplikat
-    for (int i = 0; i < tabel_siswa.getRowCount(); i++) {
-
-        if (i != baris) {
-
-            String nisnTabel = model.getValueAt(i, 0).toString();
-
-            if (nisnTabel.equals(nisn)) {
-                JOptionPane.showMessageDialog(this,
-                        "NISN sudah digunakan siswa lain!");
-                return;
-            }
+            tampilData();
+            kosongkanForm();
         }
     }
 
-    // Memperbarui data pada baris yang dipilih
-    model.setValueAt(nisn, baris, 0);
-    model.setValueAt(nama, baris, 1);
-    model.setValueAt(jurusan, baris, 2);
-    model.setValueAt(kelas, baris, 3);
-    model.setValueAt(kota, baris, 5);
-    model.setValueAt(kecamatan, baris, 6);
-    model.setValueAt(desa, baris, 7);
-    model.setValueAt(alamat, baris, 8);
+    conn.close();
 
+} catch (SQLException e) {
     JOptionPane.showMessageDialog(this,
-            "Data siswa berhasil diperbarui!");
-
+            "Gagal mengedit data: " + e.getMessage());
+}
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
