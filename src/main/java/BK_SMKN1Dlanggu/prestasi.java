@@ -6,6 +6,10 @@ package BK_SMKN1Dlanggu;
 import javax.swing.JOptionPane;
 import javax.swing.ButtonGroup;
 import java.text.ParseException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 /**
  *
  * @author 16_Devin_X-RPL-3#
@@ -280,9 +284,10 @@ buttonGroupNomor.add(jRadioButton3);
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
 String nisnSiswa = jTextField1.getText().trim();
 String nama = jTextField2.getText().trim();
-String kelas = cmb_jurusan.getSelectedItem().toString();
+String jurusan = cmb_jurusan.getSelectedItem().toString();
 String status = jComboBox1.getSelectedItem().toString();
 String keterangan = jTextField3.getText().trim();
 
@@ -309,59 +314,71 @@ if (jRadioButton1.isSelected()) {
 }
 
 // Validasi input
-if (nisnSiswa.isEmpty()
-        || nama.isEmpty()
-        || keterangan.isEmpty()) {
-
+if (nisnSiswa.isEmpty() || nama.isEmpty() || keterangan.isEmpty()) {
     JOptionPane.showMessageDialog(this,
             "NISN, nama, dan keterangan wajib diisi!");
     return;
 }
 
-if (tingkat.isEmpty()) {
+if (!nisnSiswa.matches("[0-9]{10}")) {
     JOptionPane.showMessageDialog(this,
-            "Pilih tingkat kelas terlebih dahulu!");
+            "NISN harus terdiri dari 10 angka!");
     return;
 }
 
-if (nomorKelas.isEmpty()) {
+if (tingkat.isEmpty() || nomorKelas.isEmpty()) {
     JOptionPane.showMessageDialog(this,
-            "Pilih nomor kelas terlebih dahulu!");
+            "Pilih tingkat dan nomor kelas terlebih dahulu!");
     return;
 }
 
-// Menggabungkan tingkat dan nomor kelas
-String kelasLengkap = tingkat + "-" + nomorKelas;
+// Simpan langsung ke database
+String sql = "INSERT INTO laporan (nisn, jenis_laporan, status, keterangan) "
+           + "VALUES (?, ?, ?, ?)";
 
-// Kirim data laporan
-laporan.tambahDataLaporan(
-        nisnSiswa,
-        nama,
-        kelas,
-        status,
-        "prestasi" + keterangan
-);
+try (Connection conn = Koneksi.getConnection()) {
 
-JOptionPane.showMessageDialog(this,
-        "Laporan prestasi berhasil dikirim!");
+    if (conn == null) {
+        JOptionPane.showMessageDialog(this,
+                "Koneksi database gagal!");
+        return;
+    }
 
-// Reset input
-jTextField1.setText("");
-jTextField2.setText("");
-jTextField3.setText("");
+    try (PreparedStatement pst = conn.prepareStatement(sql)) {
 
-jComboBox1.setSelectedIndex(0);
-cmb_jurusan.setSelectedIndex(0);
+        pst.setString(1, nisnSiswa);
+        pst.setString(2, "Prestasi");
+        pst.setString(3, status);
+        pst.setString(4, keterangan);
 
-jRadioButton4.setSelected(false);
-jRadioButton5.setSelected(false);
-jRadioButton6.setSelected(false);
+        pst.executeUpdate();
 
-jRadioButton1.setSelected(false);
-jRadioButton2.setSelected(false);
-jRadioButton3.setSelected(false);
+        JOptionPane.showMessageDialog(this,
+                "Laporan prestasi berhasil dikirim!");
 
-updateNomorKelas();    // TODO add your handling code here:
+        // Reset input
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+
+        jComboBox1.setSelectedIndex(0);
+        cmb_jurusan.setSelectedIndex(0);
+
+        jRadioButton1.setSelected(false);
+        jRadioButton2.setSelected(false);
+        jRadioButton3.setSelected(false);
+        jRadioButton4.setSelected(false);
+        jRadioButton5.setSelected(false);
+        jRadioButton6.setSelected(false);
+
+        updateNomorKelas();
+    }
+
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(this,
+            "Gagal menyimpan laporan: " + e.getMessage());
+}
+    // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

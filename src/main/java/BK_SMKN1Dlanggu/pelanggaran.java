@@ -6,6 +6,9 @@ package BK_SMKN1Dlanggu;
 import javax.swing.JOptionPane;
 import javax.swing.ButtonGroup;
 import java.text.ParseException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 /**
  *
  * @author 16_Devin_X-RPL-3#
@@ -390,14 +393,45 @@ public class pelanggaran extends javax.swing.JFrame {
     String kelasLengkap = tingkat + "-" + nomorKelas;
 
     // Mengirim data laporan
-    laporan.tambahDataLaporan(
-            nisnSiswa,
-            nama,
-            jurusan + " " + kelasLengkap,
-            status,
-            "Pelanggaran: " + keterangan
-    );
+   // Validasi NISN harus 10 digit angka
+if (!nisnSiswa.matches("[0-9]{10}")) {
+    JOptionPane.showMessageDialog(this,
+            "NISN harus terdiri dari 10 digit angka!");
+    return;
+}
 
+// Mengirim data ke database
+String sql = "INSERT INTO laporan "
+        + "(nisn, jenis_laporan, status, keterangan) "
+        + "VALUES (?, ?, ?, ?)";
+
+try (Connection conn = Koneksi.getConnection()) {
+
+    if (conn == null) {
+        JOptionPane.showMessageDialog(this,
+                "Koneksi database gagal!");
+        return;
+    }
+
+    try (PreparedStatement pst = conn.prepareStatement(sql)) {
+
+        pst.setString(1, nisnSiswa);
+        pst.setString(2, "Pelanggaran");
+        pst.setString(3, status);
+        pst.setString(4, keterangan);
+
+        pst.executeUpdate();
+
+        JOptionPane.showMessageDialog(this,
+                "Laporan pelanggaran berhasil dikirim!");
+
+    }
+
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(this,
+            "Gagal menyimpan laporan: " + e.getMessage());
+    return;
+}
     JOptionPane.showMessageDialog(this,
             "Laporan pelanggaran berhasil dikirim!");
 

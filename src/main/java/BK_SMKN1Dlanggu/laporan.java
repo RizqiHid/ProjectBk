@@ -4,169 +4,195 @@
  */
 package BK_SMKN1Dlanggu;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.ButtonGroup;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
- *
  * @author 16_Devin_X-RPL-3#
  */
 public class laporan extends javax.swing.JFrame {
-
-    private DefaultTableModel model;
-
-    // Penyimpanan sementara bersama untuk semua instance laporan.
-    private static final List<Object[]> dataLaporan = new ArrayList<>();
-    private static int nextId = 1;
-
     private int selectedId = -1;
+    private DefaultTableModel model;
+    private int selectedIdLaporan;
 
     private static final java.util.logging.Logger logger =
             java.util.logging.Logger.getLogger(laporan.class.getName());
 
     public laporan() {
-    initComponents();
+        initComponents();
+        
 
-    ButtonGroup grupAngka = new ButtonGroup();
+        ButtonGroup grupAngka = new ButtonGroup();
+        grupAngka.add(jRadioButton1);
+        grupAngka.add(jRadioButton2);
+        grupAngka.add(jRadioButton3);
 
-    grupAngka.add(jRadioButton1);
-    grupAngka.add(jRadioButton2);
-    grupAngka.add(jRadioButton3);
-    
-    ButtonGroup grupTingkat = new ButtonGroup();
+        ButtonGroup grupTingkat = new ButtonGroup();
+        grupTingkat.add(jRadioButton4);
+        grupTingkat.add(jRadioButton5);
+        grupTingkat.add(jRadioButton6);
 
-    grupTingkat.add(jRadioButton4);
-    grupTingkat.add(jRadioButton5);
-    grupTingkat.add(jRadioButton6);
-    
-    // Mengatur tombol angka berdasarkan jurusan
-    cmbKelas.addActionListener(e -> {
-        String jurusan = cmbKelas.getSelectedItem().toString();
+        // Mengatur tombol angka (rombel 3) berdasarkan jurusan
+        cmbKelas.addActionListener(e -> {
+            Object selected = cmbKelas.getSelectedItem();
+            if (selected == null) return;
+            String jurusan = selected.toString();
 
-        if (jurusan.equals("DKV")
-                || jurusan.equals("PHT")
-                || jurusan.equals("ANM")) {
+            if (jurusan.equals("DKV")
+                    || jurusan.equals("PHT")
+                    || jurusan.equals("ANM")) {
+                jRadioButton3.setEnabled(false);
+                if (jRadioButton3.isSelected()) {
+                    grupAngka.clearSelection();
+                }
+            } else {
+                jRadioButton3.setEnabled(true);
+            }
+        });
 
-            jRadioButton3.setEnabled(false);
-            jRadioButton3.setSelected(false);
-
-        } else {
-            jRadioButton3.setEnabled(true);
-        }
-    });
-
-    model = new DefaultTableModel(
-        new String[]{
-            "nisn Siswa",
-            "Nama",
-            "Kelas/Jurusan",
-            "Status",
-            "Prestasi/Pelanggaran"
-        }, 0
-    ) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
-
-    tblLaporan.setModel(model);
-    muatDataTabel("");
-}
-
-     // Dipanggil oleh frame Prestasi dan Pelanggaran.
-    public static void tambahDataLaporan(
-            String nisnSiswa,
-            String nama,
-            String kelas,
-            String status,
-            String jenis) {
-
-        Object[] data = {
-            nextId++,
-            nisnSiswa,
-            nama,
-            kelas,
-            status,
-            jenis
+        model = new DefaultTableModel(
+            new String[]{
+                "NISN Siswa",
+                "Nama",
+                "Kelas/Jurusan",
+                "Status",
+                "Jenis Laporan",
+                "Keterangan",
+                "ID Laporan"
+            }, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
 
-        dataLaporan.add(data);
+        tblLaporan.setModel(model);
+
+        // Sembunyikan kolom ID Laporan (indeks 6)
+        tblLaporan.getColumnModel().getColumn(6).setMinWidth(0);
+        tblLaporan.getColumnModel().getColumn(6).setMaxWidth(0);
+        tblLaporan.getColumnModel().getColumn(6).setWidth(0);
+
+        muatDataTabel("");
+    }
+    
+
+    // Dipanggil oleh frame Prestasi dan Pelanggaran untuk menyimpan ke database.
+    public static boolean tambahDataLaporan(
+            String nisnSiswa,
+            String status,
+            String jenisLaporan,
+            String keterangan) {
+
+        String sql = "INSERT INTO laporan (nisn, status, jenis_laporan, keterangan) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = Koneksi.getConnection()) {
+            if (conn == null) {
+                JOptionPane.showMessageDialog(null, "Koneksi database gagal!");
+                return false;
+            }
+
+            try (PreparedStatement pst = conn.prepareStatement(sql)) {
+                pst.setString(1, nisnSiswa.trim());
+                pst.setString(2, status);
+                pst.setString(3, jenisLaporan);
+                pst.setString(4, keterangan);
+                pst.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Gagal menambah laporan: " + e.getMessage());
+            return false;
+        }
     }
 
-    // Memuat semua data atau hasil pencarian ke tabel.
-    private void muatDataTabel(String kataKunci) {
+ private void muatDataTabel(String kataKunci) {
         model.setRowCount(0);
-
-        String cari = kataKunci.trim().toLowerCase();
-
-        for (Object[] data : dataLaporan) {
-            String id = data[1].toString().toLowerCase();
-            String nama = data[2].toString().toLowerCase();
-
-            if (cari.isEmpty()
-                    || id.contains(cari)
-                    || nama.contains(cari)) {
-
-                model.addRow(new Object[]{
-                    data[1],
-                    data[2],
-                    data[3],
-                    data[4],
-                    data[5]
-                });
-            }
-        }
-
         selectedId = -1;
-        kosongkanInput();
+
+        String sql = "SELECT l.id_laporan, l.nisn, s.nama, " +
+                "CONCAT(s.jurusan, ' ', s.tingkat, '-', s.rombel) AS kelas, " +
+                "l.status, l.jenis_laporan, l.keterangan " +
+                "FROM laporan l " +
+                "JOIN siswa s ON l.nisn = s.nisn " +
+                "WHERE l.nisn LIKE ? OR s.nama LIKE ? " +
+                "ORDER BY l.id_laporan DESC";
+
+        try (Connection conn = Koneksi.getConnection()) {
+            if (conn == null) {
+                JOptionPane.showMessageDialog(this, "Koneksi database gagal!");
+                return;
+            }
+
+            try (PreparedStatement pst = conn.prepareStatement(sql)) {
+                String cari = "%" + kataKunci.trim() + "%";
+                pst.setString(1, cari);
+                pst.setString(2, cari);
+
+                try (ResultSet rs = pst.executeQuery()) {
+                    while (rs.next()) {
+                        model.addRow(new Object[]{
+                            rs.getString("nisn"),
+                            rs.getString("nama"),
+                            rs.getString("kelas"),
+                            rs.getString("status"),
+                            rs.getString("jenis_laporan"),
+                            rs.getString("keterangan"),
+                            rs.getInt("id_laporan")
+                        });
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat laporan: " + e.getMessage());
+        }
     }
 
-    private Object[] cariDataBerdasarkanIdSiswa(String nisnSiswa) {
-        for (Object[] data : dataLaporan) {
-            if (data[1].toString().equals(nisnSiswa)) {
-                return data;
+    private void setPilihanKelas(String kelasLengkap) {
+        // Contoh format: "RPL X-1"
+        if (kelasLengkap == null || kelasLengkap.isBlank()) return;
+
+        String[] bagian = kelasLengkap.trim().split("\\s+");
+        if (bagian.length >= 1) {
+            cmbKelas.setSelectedItem(bagian[0]);
+        }
+        if (bagian.length >= 2) {
+            String[] tingkatRombel = bagian[1].split("-");
+            if (tingkatRombel.length >= 1) {
+                String tingkat = tingkatRombel[0];
+                jRadioButton4.setSelected("X".equals(tingkat));
+                jRadioButton5.setSelected("XI".equals(tingkat));
+                jRadioButton6.setSelected("XII".equals(tingkat));
+            }
+            if (tingkatRombel.length >= 2) {
+                int rombel = Integer.parseInt(tingkatRombel[1]);
+                jRadioButton1.setSelected(rombel == 1);
+                jRadioButton2.setSelected(rombel == 2);
+                jRadioButton3.setSelected(rombel == 3);
             }
         }
-
-        return null;
     }
 
-    private Object[] cariDataInternal(int idCatatan) {
-        for (Object[] data : dataLaporan) {
-            if ((int) data[0] == idCatatan) {
-                return data;
-            }
-        }
-
-        return null;
-    }
-
-    private void kosongkanInput() {
+ private void kosongkanInput() {
         txtId.setText("");
         txtNama.setText("");
         cmbKelas.setSelectedIndex(0);
         cmbStatus.setSelectedIndex(0);
         kt.setText("");
         tblLaporan.clearSelection();
+        selectedId = -1;
     }
 
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")                                                                                                       
+  public void refreshLaporan() {
+        String kataKunci = (txtId != null) ? txtId.getText() : "";
+        muatDataTabel(kataKunci);
+    }                                                                                         
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -273,6 +299,8 @@ public class laporan extends javax.swing.JFrame {
             tblLaporan.getColumnModel().getColumn(3).setMaxWidth(125);
             tblLaporan.getColumnModel().getColumn(4).setPreferredWidth(210);
             tblLaporan.getColumnModel().getColumn(4).setMaxWidth(10000);
+            tblLaporan.getColumnModel().getColumn(5).setMinWidth(30);
+            tblLaporan.getColumnModel().getColumn(5).setMaxWidth(100);
         }
 
         btnEdit.setText("Edit");
@@ -431,9 +459,9 @@ public class laporan extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbKelasActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+
         if (selectedId == -1) {
-            JOptionPane.showMessageDialog(this,
-                    "Pilih data yang ingin dihapus!");
+            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus!");
             return;
         }
 
@@ -445,16 +473,18 @@ public class laporan extends javax.swing.JFrame {
         );
 
         if (konfirmasi == JOptionPane.YES_OPTION) {
-            int id = selectedId;
+            String sql = "DELETE FROM laporan WHERE id_laporan = ?";
+            try (Connection conn = Koneksi.getConnection();
+                 PreparedStatement pst = conn.prepareStatement(sql)) {
+                pst.setInt(1, selectedId);
+                pst.executeUpdate();
 
-            dataLaporan.removeIf(
-                    data -> (int) data[0] == id
-            );
-
-            muatDataTabel("");
-
-            JOptionPane.showMessageDialog(this,
-                    "Data laporan berhasil dihapus.");
+                muatDataTabel("");
+                kosongkanInput();
+                JOptionPane.showMessageDialog(this, "Data laporan berhasil dihapus.");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data: " + e.getMessage());
+            }
         }
    // TODO add your handling code here:
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -506,9 +536,8 @@ try {
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void tblLaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLaporanMouseClicked
-                                         
-    int baris = tblLaporan.getSelectedRow();
 
+        int baris = tblLaporan.getSelectedRow();
         if (baris == -1) {
             return;
         }
@@ -517,29 +546,15 @@ try {
         String nama = model.getValueAt(baris, 1).toString();
         String kelas = model.getValueAt(baris, 2).toString();
         String status = model.getValueAt(baris, 3).toString();
-        String jenis = model.getValueAt(baris, 4).toString();
         String keterangan = model.getValueAt(baris, 5).toString();
+        selectedId = Integer.parseInt(model.getValueAt(baris, 6).toString());
 
         txtId.setText(idSiswa);
         txtNama.setText(nama);
-        cmbKelas.setSelectedItem(kelas);
         cmbStatus.setSelectedItem(status);
         kt.setText(keterangan);
+        setPilihanKelas(kelas);
 
-        // Cari ID internal berdasarkan baris yang dipilih.
-        selectedId = -1;
-
-        for (Object[] data : dataLaporan) {
-            if (data[1].toString().equals(idSiswa)
-                    && data[2].toString().equals(nama)
-                    && data[3].toString().equals(kelas)
-                    && data[4].toString().equals(status)
-                    && data[5].toString().equals(jenis)) {
-
-                selectedId = (int) data[0];
-                break;
-            }
-        }
         // TODO add your handling code here:
     }//GEN-LAST:event_tblLaporanMouseClicked
 
@@ -550,39 +565,28 @@ try {
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
 
         if (selectedId == -1) {
-            JOptionPane.showMessageDialog(this,
-                    "Pilih data yang ingin diedit!");
+            JOptionPane.showMessageDialog(this, "Pilih data yang ingin diedit!");
             return;
         }
 
-        Object[] data = cariDataInternal(selectedId);
+        String status = cmbStatus.getSelectedItem().toString();
+        String keterangan = kt.getText().trim();
 
-        if (data == null) {
-            JOptionPane.showMessageDialog(this,
-                    "Data tidak ditemukan!");
+        String sql = "UPDATE laporan SET status = ?, keterangan = ? WHERE id_laporan = ?";
+        try (Connection conn = Koneksi.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, status);
+            pst.setString(2, keterangan);
+            pst.setInt(3, selectedId);
+            pst.executeUpdate();
+
             muatDataTabel("");
-            return;
+            kosongkanInput();
+            JOptionPane.showMessageDialog(this, "Data laporan berhasil diedit.");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengedit data: " + e.getMessage());
         }
-
-        String id = txtId.getText().trim();
-        String nama = txtNama.getText().trim();
-
-        if (id.isEmpty() || nama.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "ID dan Nama harus diisi!");
-            return;
-        }
-
-        data[1] = id;
-        data[2] = nama;
-        data[3] = cmbKelas.getSelectedItem().toString();
-        data[4] = cmbStatus.getSelectedItem().toString();
-        data[5] = kt;
-
-        muatDataTabel("");
-
-        JOptionPane.showMessageDialog(this,
-                "Data laporan berhasil diedit."); // TODO add your handling code here:
+    // TODO add your handling code here:
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
@@ -606,16 +610,12 @@ try {
      * @param args the command line arguments
      */
     // Panggil ini jika frame laporan sudah terbuka dan data baru masuk.
-    public void refreshLaporan() {
-        muatDataTabel("");
-    }
+    // Panggil ini jika frame laporan sudah terbuka dan data baru masuk.
 
-    public static void main(String args[]) {
+public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() ->
                 new laporan().setVisible(true));
-    // Pertahankan initComponents() dari kode GUI Builder lu.
-    // Pertahankan juga deklarasi semua komponen GUI di bagian bawah.
-}
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
